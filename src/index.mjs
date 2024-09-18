@@ -1,10 +1,12 @@
-const express = require("express");
-const axios = require("axios");
-const pLimit = require("p-limit");
-require("dotenv").config();
+import express from "express";
+import axios from "axios";
+import pLimit from "p-limit";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8058;
+const PORT = 3000;
 
 const apiURLs = process.env.API_URLS ? process.env.API_URLS.split("|") : [];
 
@@ -21,7 +23,7 @@ const callApi = async (apiURL) => {
   }
 };
 
-const limit = pLimit(process.env.LIMIT || 10);
+const limit = pLimit(3);
 
 const callApisSimultaneouslyWithLimit = () => {
   setInterval(() => {
