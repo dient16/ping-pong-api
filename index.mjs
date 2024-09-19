@@ -19,7 +19,7 @@ const callApi = async (apiURL) => {
   }
 };
 
-const limit = pLimit(process.env.LIMIT || 5);
+const limit = pLimit(Number.parseInt(process.env.LIMIT, 10) || 5);
 
 const callApisSimultaneouslyWithLimit = () => {
   setTimeout(() => {
