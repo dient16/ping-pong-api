@@ -2,7 +2,6 @@ import express from "express";
 import axios from "axios";
 import pLimit from "p-limit";
 import dotenv from "dotenv";
-import cron from "node-cron";
 import morgan from "morgan";
 
 dotenv.config();
@@ -16,17 +15,14 @@ const cronInterval = process.env.CRON_INTERVAL || 20;
 
 const limit = pLimit(Number.parseInt(process.env.LIMIT, 10) || 5);
 
-app.use(morgan("combined"));
-
-let requestCount = 0;
+app.use(morgan("dev"));
 
 const callApis = async () => {
   try {
     const apiCalls = apiURLs.map((apiURL) =>
       limit(async () => {
         try {
-          const response = await axios.get(apiURL, { timeout: 5000 });
-          requestCount++;
+          const response = await axios.get(apiURL);
           console.log(`Response from ${apiURL}:`, response.data);
         } catch (error) {
           console.error(`Error calling ${apiURL}:`, error.message);
@@ -44,7 +40,7 @@ const callApis = async () => {
 const callOtherServerAndApis = async () => {
   try {
     const response = await axios.get(otherServerURL);
-    requestCount++;
+
     console.log(
       `Response from other server (${otherServerURL}):`,
       response.data
@@ -59,16 +55,10 @@ const callOtherServerAndApis = async () => {
 };
 
 app.get("/ping", async (req, res) => {
-  res.send(`pong - Total requests made: ${requestCount}`);
+  res.send("pong ");
+  await callOtherServerAndApis();
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-
-  cron.schedule(`*/${cronInterval} * * * * *`, async () => {
-    console.log(
-      `Calling other server and APIs every ${cronInterval} seconds...`
-    );
-    await callOtherServerAndApis();
-  });
 });
