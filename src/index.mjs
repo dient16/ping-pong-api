@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 8058;
 
 const apiURLs = process.env.API_URLS ? process.env.API_URLS.split("|") : [];
 
@@ -19,7 +19,7 @@ const callApi = async (apiURL) => {
   }
 };
 
-const limit = pLimit(3);
+const limit = pLimit(process.env.LIMIT || 5);
 
 const callApisSimultaneouslyWithLimit = () => {
   setTimeout(() => {
