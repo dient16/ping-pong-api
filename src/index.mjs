@@ -39,7 +39,6 @@ const callApis = async () => {
 
 const callOtherServerAndApis = async () => {
   try {
-    await delay(cronInterval);
     const response = await axios.get(otherServerURL);
     console.log(
       `Response from other server (${otherServerURL}):`,
@@ -55,6 +54,7 @@ const callOtherServerAndApis = async () => {
 };
 
 app.get("/ping", async (req, res) => {
+  await delay(cronInterval * 1000);
   res.send("pong ");
   await callOtherServerAndApis();
 });
