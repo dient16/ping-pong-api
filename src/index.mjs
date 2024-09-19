@@ -39,7 +39,7 @@ const callApis = async () => {
 
 const callOtherServerAndApis = async () => {
   try {
-    await delay(5000);
+    await delay(cronInterval);
     const response = await axios.get(otherServerURL);
     console.log(
       `Response from other server (${otherServerURL}):`,
