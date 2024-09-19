@@ -16,7 +16,7 @@ const cronInterval = process.env.CRON_INTERVAL || 20;
 const limit = pLimit(Number.parseInt(process.env.LIMIT, 10) || 5);
 
 app.use(morgan("dev"));
-
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const callApis = async () => {
   try {
     const apiCalls = apiURLs.map((apiURL) =>
